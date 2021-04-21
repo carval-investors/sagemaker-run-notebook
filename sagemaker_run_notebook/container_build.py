@@ -30,7 +30,7 @@ import sagemaker_run_notebook.utils as utils
 default_base = "python:3.7-slim-buster"
 
 
-def create_project(repo_name, role, zipfile, base_image=default_base):
+def create_project(repo_name, role, zipfile, base_image=default_base, docker_user):
     session = boto3.session.Session()
     client = session.client("codebuild")
 
@@ -53,6 +53,7 @@ def create_project(repo_name, role, zipfile, base_image=default_base):
                 {"name": "IMAGE_REPO_NAME", "value": repo_name},
                 {"name": "IMAGE_TAG", "value": "latest"},
                 {"name": "BASE_IMAGE", "value": base_image},
+                {"name": "DOCKER_USER", "value": docker_user},
             ],
             "privilegedMode": True,
         },
@@ -302,7 +303,7 @@ def delete_zip_file(bucket, key):
 
 
 def create_container(
-    repo_name, role, bucket, base, requirements, script, kernel, log=True
+    repo_name, role, bucket, base, requirements, script, kernel, docker_user, log=True
 ):
     container_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "container"
@@ -319,7 +320,7 @@ def create_container(
                 print(kernel, file=f)
         bucket, key = upload_zip_file(repo_name, bucket, dir=dest_dir)
     try:
-        create_project(repo_name, role, zipfile=f"{bucket}/{key}", base_image=base)
+        create_project(repo_name, role, zipfile=f"{bucket}/{key}", base_image=base, docker_user)
         try:
             id = start_build(repo_name)
             if log:

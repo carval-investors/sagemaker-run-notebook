@@ -269,6 +269,7 @@ def create_container(args):
         args.requirements,
         args.script,
         args.kernel,
+        args.docker_user,
         log=not args.no_logs,
     )
 
@@ -516,6 +517,11 @@ def cli_argparser():
         "--role",
         help=f"The IAM role for CodeBuild to use (default: {container_build_role}).",
         default=container_build_role,
+    )
+    container_parser.add_argument(
+        "--docker_user",
+        help=f"The user for login to ECR",
+        default="AWS",
     )
     container_parser.add_argument(
         "--bucket",

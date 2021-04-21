@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=python:3.10-rc-buster
+ARG BASE_IMAGE=need_an_image
 FROM $BASE_IMAGE
 
 ENV JUPYTER_ENABLE_LAB yes
