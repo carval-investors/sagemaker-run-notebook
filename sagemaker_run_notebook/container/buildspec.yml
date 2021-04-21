@@ -7,7 +7,7 @@ phases:
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
       - base_region=$(echo ${BASE_IMAGE} | sed -n 's%\([0-9]*\)\.dkr\.ecr\.\([^.]*\)\.amazonaws.com/.*%\2%p')
       - base_account=$(echo ${BASE_IMAGE} | sed -n 's%\([0-9]*\)\.dkr\.ecr\.\([^.]*\)\.amazonaws.com/.*%\1%p')
-      - if [ "${base_account}" != "" ]; then aws ecr get-login-password --region ${base_region} | docker login --username AWS --password-stdin ${base_account}.dkr.ecr.${base_region}.amazonaws.com; fi 
+      - if [ "${base_account}" != "" ]; then aws ecr get-login-password --region ${base_region} | docker login --username ${DOCKER_USER} --password-stdin ${base_account}.dkr.ecr.${base_region}.amazonaws.com; fi 
   build:
     commands:
       - echo Build started on `date`
